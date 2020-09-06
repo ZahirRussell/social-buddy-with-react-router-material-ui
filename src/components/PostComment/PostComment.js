@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -13,20 +13,35 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 860,
       backgroundColor: theme.palette.background.paper,
     },
+    img:{
+      width:'80px',
+      height:'80px',
+      marginLeft:'15px',
+      marginRight:'15px',
+    },
   }));
 
 const PostComment = (props) => {
     const{id,name,email,body} = props.postComment;
-    const userImage = 'https://via.placeholder.com/50'
     const classes = useStyles();
 
-    return (
-        
+    const [userImage, setuserImage] = useState([]);
+    useEffect(()=> {
+         const url = `https://jsonplaceholder.typicode.com/photos/${id}`;
+        console.log(url);
+        fetch(url)
+        .then((res) => res.json())
+            .then((data) => setuserImage(data)  
+            )
+    },[])
+    
+
+    return (       
 
     <List className={classes.root}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-            <Avatar alt="User Image" src={userImage} />
+            <Avatar className={classes.img} alt="User Image" src={userImage.thumbnailUrl} />
         </ListItemAvatar>
         <ListItemText
           primary={name}
